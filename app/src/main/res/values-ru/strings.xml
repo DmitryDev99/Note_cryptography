@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Заметки с шифрованием</string>
+
+    <!--region Экран списка заметок -->
+    <string name="list_note_title">Список заметок</string>
+    <string name="list_notes_new_note">Новая заметка</string>
+    <!--endregion-->
+</resources>
