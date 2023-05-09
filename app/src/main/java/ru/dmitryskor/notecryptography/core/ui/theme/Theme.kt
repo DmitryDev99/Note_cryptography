@@ -1,4 +1,4 @@
-package ru.dmitryskor.notecryptography.ui.theme
+package ru.dmitryskor.notecryptography.core.ui.theme
 
 import android.app.Activity
 import android.os.Build

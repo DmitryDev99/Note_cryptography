@@ -17,16 +17,19 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import ru.dmitryskor.notecryptography.mainScreen.domain.services.StringResListNoteService
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
+import ru.dmitryskor.notecryptography.core.ui.theme.NoteCryptographyTheme
 import ru.dmitryskor.notecryptography.navigation.ui.NavScreen
-import ru.dmitryskor.notecryptography.ui.theme.NoteCryptographyTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        StringService.initContext(this)
+        lifecycleScope.launch {
+            context.emit(this@MainActivity)
+        }
         setContent {
             NoteCryptographyTheme {
                 Surface(
@@ -41,21 +44,15 @@ class MainActivity : ComponentActivity() {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        StringService.initContext(this)
-    }
-}
-
-object StringService : StringResListNoteService {
-    private const val EMPTY_STRING = ""
-    fun initContext(context: Context) {
-        listNotesTitle_Private.value = context.getString(R.string.list_note_title)
-        listNotesNewNote_Private.value = context.getString(R.string.list_notes_new_note)
+        lifecycleScope.launch {
+            context.emit(this@MainActivity)
+        }
     }
 
-    private val listNotesTitle_Private = MutableStateFlow(EMPTY_STRING)
-    override val listNotesTitle = listNotesTitle_Private.asStateFlow()
-    private val listNotesNewNote_Private = MutableStateFlow(EMPTY_STRING)
-    override val listNotesNewNote = listNotesNewNote_Private.asStateFlow()
+    companion object {
+        private val context = MutableSharedFlow<Context?>(replay = 1, extraBufferCapacity = 1)
+        val contextFlow = context.asSharedFlow()
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

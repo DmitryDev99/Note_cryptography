@@ -1,4 +1,4 @@
-package ru.dmitryskor.notecryptography.ui.theme
+package ru.dmitryskor.notecryptography.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

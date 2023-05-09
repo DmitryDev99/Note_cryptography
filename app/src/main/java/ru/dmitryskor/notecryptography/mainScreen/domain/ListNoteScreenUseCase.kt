@@ -1,19 +1,21 @@
 package ru.dmitryskor.notecryptography.mainScreen.domain
 
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
+import ru.dmitryskor.notecryptography.core.domain.MVIUseCase
+import ru.dmitryskor.notecryptography.mainScreen.domain.services.StringResListNoteService
 import ru.dmitryskor.notecryptography.mainScreen.ui.viewModel.ListNoteContract
-import ru.dmitryskor.notecryptography.mainScreen.ui.viewModel.MVIUseCase
 
 class ListNoteScreenUseCase(
-    private val stringRes: GetStringsListNoteUseCase
+    private val stringService: StringResListNoteService
 ) : MVIUseCase<ListNoteContract.State, ListNoteContract.Effect, ListNoteContract.Intent>() {
     override fun createInitState() = ListNoteContract.State()
 
     override suspend fun invoke() {
-        stringRes.invoke().map {
+
+        stringService.listNotesTitle.combine(stringService.listNotesNewNote) { title, newNote ->
             setState {
-                copy(title = it.listNotesTitle, floatContentDescription = it.listNotesNewNote)
+                copy(title = title, floatContentDescription = newNote)
             }
         }.collect()
     }
